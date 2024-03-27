@@ -1,0 +1,297 @@
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden; /* Prevent horizontal scrollbar */
+	background: url('../img/bg-3.jpg') no-repeat center center fixed; 
+	background-size: cover; /* Cover the entire viewport */
+	animation: moveBackground 30s /* linear infinite;*/
+}
+
+ @keyframes moveBackground {
+	0% { background-position: 0 bottom; }
+	100% { background-position: 100% bottom; }
+}
+
+.section {
+	max-width:600px;
+	margin: 0 auto;
+	width: 100vw; /* Full viewport width */
+	/* height: 100vh; */ /* Full viewport height */
+	display: flex;
+	flex-wrap: wrap; /* Allow task boxes to wrap as needed */
+	justify-content: center;
+	align-items: center;
+}
+
+.task-box {
+	width: calc(50% - 4%); /* Calculate width as 50% of container minus margin */
+	margin: 2%; /* Adjust the margin as needed */
+	background-color: rgba(255, 255, 255, 0.8); /* Base color for contrast */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative; /* Needed for maintaining the aspect ratio */
+	border-radius: 15px; /* Rounded corners for the boxes */
+	box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Deeper shadow for a 3D effect */
+	border: 4px solid rgba(255, 255, 255, 0.6); /* Light border for a lifted edge */
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2); /* Text shadow for depth */
+	transition: transform 0.2s; /* Smooth transition for pressing effect */
+}
+
+.task-box::before {
+	content: '';
+	float: left;
+	padding-top: 100%; /* This creates a square box */
+}
+
+.task-box-content {
+
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: 'Bubblegum Sans', cursive;
+	font-size: 1.45rem;
+	color: #ffffff; /* Assuming this provides better contrast */
+	text-shadow: 
+		 -1px -1px 0 #,  
+		 1px -1px 0 #,
+		-1px  1px 0 #,
+		 3px  2px 0 #; /* White text shadow creating an outline effect */
+	letter-spacing: 1px; /* Improved letter spacing */
+	/* text-transform: uppercase; Uniform text */
+	text-align: center;
+	padding: 10px;
+	background: linear-gradient(to top right, #ffffff33 0%, #ffffff00 100%); /* Subtle gradient overlay */
+}
+
+/* Define individual colors for each task box */
+.make-bed { background-color: #F3E9B5; }
+.brush-teeth { background-color: #CDE4D0; }
+.get-dressed { background-color: #F7D1D0; }
+.leave-on-time { background-color: #C5AED1; }
+.homework { background-color: #AEDFF2; }
+.tidy-up { background-color: #FED1BB; }
+.brush-teeth-night { background-color: #E9A9A3; }
+.pajamas { background-color: #9CD1C2; }
+
+/* ... Continue with specific colors for each task */
+
+/* Add a pseudo-element for extra 3D effect */
+.task-box::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+    z-index: -1; /* Place it below the content */
+    transition: opacity 0.2s;
+}
+
+.task-box:active {
+    transform: translateY(4px); /* Simulate button press */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Smaller shadow for pressed effect */
+}
+
+.task-box:active::after {
+    opacity: 0; /* Fade out the pseudo-element to highlight the press effect */
+}
+
+    
+    
+    .task-box.clicked {
+  background-color: magenta; /* Button color changes to magenta */
+ color: white !important;  /* Text color changes to white */
+}
+
+#gold-coin {
+    width: 150px; /* Initial size of the coin */
+    height: 150px;
+    background-image: url('../img/coin.png'); /* Path to your gold coin image */
+    background-size: cover;
+    border-radius: 50%; /* Makes the div circular */
+    position: fixed; /* So that it can be placed over other content */
+    top: 50%; /* Center on the screen */
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0); /* Start scaled down to 0 */
+    opacity: 0; /* Start invisible */
+}
+
+@keyframes spinZoomAndFall {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, 150%) scale(.3); /* Move it downwards */
+        opacity: 0; /* Optionally, make it fade out as it falls */
+    }
+}
+
+.spin-zoom-and-fall {
+    animation: spinZoomAndFall 1.25s ease forwards; /* Adjust the duration as needed */
+}
+
+
+
+
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1; /* Above everything */
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.4); /* Black with opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.section_title {
+	width:100%;
+	clear:both !important;
+	margin-top:0px;
+	font-family: 'Bubblegum Sans', cursive;color: #d061ae; /* Assuming this provides better contrast */
+	text-shadow: 
+		 -1px -1px 0 #fff,  
+		 1px -1px 0 #fff,
+		-1px  1px 0 #fff,
+		 3px  2px 0 #fff; /* White text shadow creating an outline effect */
+	letter-spacing: 1px;text-align:center
+}
+
+
+
+.icon-bar {
+    width: 100%;
+    background-color: #ff719f; /* Or any color you like */
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    z-index: 1000; /* Ensure it's on top of other content */
+}
+
+.icon-bar a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    color: white; /* Icon color */
+    text-align: center;
+    padding: 12px 16px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.icon-bar a:hover {
+    background-color: #439d9c; /* Change color on hover */
+}
+
+/* Icon size */
+.icon-bar .fas {
+    font-size: 24px;
+}
+
+.badge-wrapper {
+    position: relative;
+    display: inline-block; /* or as needed */
+    text-align:center;
+}
+
+.badge-wrapper .fa-lock {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Additional styling for the lock icon */
+    z-index:1;
+}
+
+
+/* Styles specific to the video modal */
+#videoModal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 2; /* Higher than other elements */
+    left: 0;
+    top: 0;
+    width: 100vw; /* Full width of the viewport */
+    height: 100vh; /* Full height of the viewport */
+    background-color: rgba(0,0,0,0.9); /* Black with opacity */
+}
+
+#videoModal .modal-content {
+    position: relative;
+    margin: auto;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+}
+
+#videoModal video {
+    width: 100%;
+    height: 100%;
+    
+}
+
+/* Close button style (if needed) */
+#videoModal .close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: black;
+    font-size: 30px;
+    font-weight: bold;
+    z-index: 100;
+}
+
+#videoModal .close:hover,
+#videoModal .close:focus {
+    color: #999;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.pb-100 {padding-bottom: 100px !important}
+
+</style>

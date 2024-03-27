@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>TO-DO-LOO</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+   
+</head>
+<body>
+
+	<!-- User Toggle Button -->
+	<div class="user-toggle" style="margin: 0 auto;text-align:center">
+	  <img id="current-user-img" src="img/default-profile.png" alt="Pick a User" style="max-width:120px;margin-top:10px"/>
+	</div>
+	
+	<!-- User Selection Modal -->
+	<div id="user-selection-modal" style="display: none;text-align:center">
+	  <!-- Users will be dynamically inserted here -->
+	</div>
+    
+    <!-- Sections & Tasks -->
+    <div id="container"  class="pb-100">
+ 	<!--   <h1 class="section_title">Mornings</h1>
+        
+        <div class="task-box make-bed">
+            <div class="task-box-content" style="font-size: 2.45rem;">Bed</div>
+        </div>
+         <div class="task-box brush-teeth">
+            <div class="task-box-content" style="font-size: 2.2rem;" disabled>Breakfast</div>
+        </div>
+        <div class="task-box brush-teeth">
+            <div class="task-box-content" style="font-size: 2.45rem;">Teeth</div>
+        </div>
+         <div class="task-box get-dressed">
+            <div class="task-box-content" style="font-size: 2.45rem;">Dressed</div>
+        </div>
+        <div class="task-box leave-on-time">
+            <div class="task-box-content" style="font-size: 2.2rem;">On-Time</div>
+        </div>
+    
+      	<h1 class="section_title">Evenings</h1>
+        
+         <div class="task-box homework">
+            <div class="task-box-content" style="font-size: 2rem;">Homework</div>
+        </div>
+         <div class="task-box get-dressed">
+            <div class="task-box-content" style="font-size: 2.4rem;">Dinner</div>
+        </div>
+        <div class="task-box tidy-up">
+            <div class="task-box-content" style="font-size: 2.3rem;">Tidy Up</div>
+        </div>
+         <div class="task-box brush-teeth-night">
+            <div class="task-box-content" style="font-size: 2.45rem;">Teeth</div>
+        </div>
+         <div class="task-box pajamas">
+            <div class="task-box-content" style="font-size: 2.45rem;">PJ's</div>
+        </div>-->
+    </div>
+    
+     <!-- ICON BAR -->
+     <div class="icon-bar">
+        <a href="#" id="home-icon" class="home"><i class="fas fa-home" ></i></a> 
+        <a href="#" id="showTaskSummary"  class="bank"><i class="fas fa-award"></i></a> 
+        <a href="#" id="profilepick" class="profile"><i class="fas fa-user-circle"></i></a>
+    </div>
+    
+    <!-- Gold Coin -->
+    <div id="gold-coin"></div>
+    
+   <div id="taskCountModal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2 class="text-center">Your Badges</h2>
+			<div id="badges-container">
+				<!-- Badges will be inserted here -->
+			</div>
+		</div>
+	</div>
+
+	<!-- Video Modal -->
+	<div id="videoModal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<video id="badgeVideo" width="100%" controls  autoplay loop>
+				<source type="video/mp4">
+				Your browser does not support the video tag.
+			</video>
+		</div>
+	</div>
+
+
+	<!-- Profile Photo Selection Modal -->
+	<div id="profilePhotoModal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2 class="text-center" style="font-family: 'Bubblegum Sans', cursive;">Select a Photo</h2>
+			<div id="profilePhotoGrid" style="display: flex; flex-wrap: wrap; justify-content: center;">
+				<!-- Profile photos will be dynamically loaded here -->
+			</div>
+		</div>
+	</div>
+
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+
+	<!-- ToDoLoo JS -->
+	<script src="js/run.confetti.js"></script>
+	<script src="js/init.task.js"></script>
+	<script src="js/toogle.btn.js"></script>
+	<script src="js/modal.func.js"></script>
+	<script src="js/fetch.task.count.js"></script>
+	<script src="js/fetch.tasks.js"></script>
+	<script src="js/animate.coin.js"></script>
+	<script src="js/fetch.badges.js"></script>
+	<script src="js/display.badges.js"></script>
+	<script src="js/open.video.js"></script>
+	
+<script>
+
+
+$(document).ready(function() {
+
+	$('#home-icon').click(function(event) {
+		event.preventDefault(); // Prevent the default action if it's a link
+		$('html, body').animate({
+			scrollTop: 0
+		}, 'smooth');
+	});
+    
+  	//Function to apply the initial state from the database to each button
+ 	function applyInitialState(tasks) {
+  $('.task-box').each(function() {
+    // Clear previous states
+    $(this).removeClass('clicked').css({
+      'background-color': '', // Revert to original background color
+      'color': '' // Revert to original text color
+    });
+
+    // Apply new state based on the tasks object
+    let taskName = $(this).find('.task-box-content').text().trim();
+    $(this).attr('data-task-name', taskName); // Store the task name as a data attribute
+    if (tasks[taskName] === 'done') {
+      $(this).addClass('clicked').css({
+        'background-color': 'magenta',
+        'color': 'white'
+      });
+    }
+  });
+}
+
+	//Fetch initial states when the page loads
+	$.ajax({
+		url: 'check_tasks.php', // Path to the PHP script that checks the tasks
+		type: 'GET',
+		data: {
+		user_id: activeUserId // Make sure this variable is set to the currently active user's ID
+	  },
+		dataType: 'json',
+		success: function(tasks) {
+		  applyInitialState(tasks);
+		},
+		error: function(xhr, status, error) {
+		  console.error("An error occurred: " + error);
+		}
+	  });
+ 
+	// Attach one event listener to the parent container, which will handle clicks on any child elements with the class 'task-box'.
+	$('#container').on('click', '.task-box', function() {
+    if (!activeUserId) {
+        $('html, body').animate({ scrollTop: 0 }, 'smooth');
+        $('#user-selection-modal').show();
+    } else {
+        toggleButtonStyle(this);
+    }
+});
+
+	// Function to fetch and display users
+ 	function fetchUsers() {
+  $.ajax({
+    url: 'get_users.php',
+    type: 'GET',
+    dataType: 'json',
+    success: function(users) {
+      $('#user-selection-modal').empty(); // Clear existing users before appending new ones
+      users.forEach(function(user) {
+        const userDiv = $('<div>').addClass('user-option');
+        const img = $('<img>').css({ "max-width": "175px", "margin": "10px" }).attr({
+          src: user.PhotoURL,
+          alt: user.username,
+          'data-user-id': user.id
+        });
+        const userName = $('<span>').text(user.username).css({ "display": "block", "text-align": "center", "font-family": "Bubblegum Sans","font-size": "2em","color": "white","text-shadow": "3px 3px 3px #333" }); // Style as needed
+
+        $('#user-selection-modal').append(
+          userDiv.append(img).append(userName) // Append both img and username span to the div
+        );
+      });
+    },
+    error: function(xhr, status, error) {
+      console.error("An error occurred: " + error);
+    }
+  });
+}
+
+	// Fetch users when the page loads
+ 	 fetchUsers();
+
+	// Toggle user selection modal
+  	$('.user-toggle').on('click touchstart', function(event) {
+  	console.log('User toggle clicked/touched'); // For debugging
+  	event.preventDefault(); // Prevents the default action of the touch event
+ 	$('#user-selection-modal').toggle(); // This shows or hides the modal
+});
+
+  	// Handle user selection
+  	$('#user-selection-modal').on('click', '.user-option img', function() {
+    activeUserId = $(this).data('user-id'); // Update the active user ID
+    $('#current-user-img').attr('src', $(this).attr('src')); // Updates the user toggle button image
+    $('#user-selection-modal').hide(); // Hide the modal after selection
+    fetchTaskStatusForUser(activeUserId); // Fetch tasks for the selected user
+  });
+
+	function fetchTaskStatusForUser(userId) {
+  		$.ajax({
+    url: 'check_tasks.php',
+    type: 'GET',
+    data: { user_id: userId },
+    dataType: 'json',
+    success: function(tasks) {
+      applyInitialState(tasks);
+    },
+    error: function(xhr, status, error) {
+      console.error("An error occurred: " + error);
+    }
+  });
+	}
+
+ 	$.ajax({
+        url: 'get_sections.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(sections) {
+            sections.forEach(function(section) {
+                var sectionDiv = $('<div>').addClass('section').append(
+                    $('<h1 class="section_title">').text(section.name)
+                );
+                $('#container').append(sectionDiv);
+                fetchTasksForSection(section.id, sectionDiv);
+            });
+        }
+    });
+    
+
+	// Get the button that toggles the modal
+	var profilePickButton = document.getElementById('profilepick');
+	var profilePhotoModal = document.getElementById('profilePhotoModal');
+
+	// Get the elements
+	var taskSummaryButton = document.getElementById('showTaskSummary');
+	var taskCountModal = document.getElementById('taskCountModal');
+
+	// Toggle the taskCountModal on taskSummaryButton click
+	taskSummaryButton.onclick = function() {
+		// Close profilePhotoModal if it's open
+		if (profilePhotoModal.style.display === 'block') {
+			profilePhotoModal.style.display = 'none';
+		}
+
+		// Now toggle the taskCountModal
+		if (taskCountModal.style.display === 'block') {
+			// Modal is open, so close it
+			taskCountModal.style.display = 'none';
+		} else {
+			// Modal is closed, so open it and fetch data
+			taskCountModal.style.display = 'block';
+			//fetchTaskCounts(); // Fetch task counts if needed
+			fetchAndDisplayBadges(activeUserId); 
+		}
+	};
+
+	// Toggle the modal on button click
+	profilePickButton.onclick = function() {
+    // Close taskCountModal if it's open
+    if (taskCountModal.style.display === 'block') {
+        taskCountModal.style.display = 'none';
+    }
+
+    // Now toggle the profilePhotoModal
+    if (profilePhotoModal.style.display === 'block') {
+        // Modal is open, so close it
+        profilePhotoModal.style.display = 'none';
+    } else {
+        // Modal is closed, so open it
+        profilePhotoModal.style.display = 'block';
+        fetchProfilePhotos(); // Fetch photos if needed
+    }
+};
+    // Function to close the profile photo modal
+    $('.close').on('click', function() {
+        $('#profilePhotoModal').hide();
+    });
+
+    // Function to fetch and display profile photos
+    function fetchProfilePhotos() {
+        // AJAX call to fetch profile photos
+        $.ajax({
+            url: 'get_profile_photos.php',
+            type: 'GET',
+            dataType: 'json',
+           
+            success: function(photos) {
+					var photoGrid = $('#profilePhotoGrid');
+					photoGrid.empty(); // Clear existing photos
+					photos.forEach(function(photo) {
+						var img = $('<img>').attr({
+							src: photo.PhotoURL, // Make sure this matches the key in the response
+							'data-photo-id': photo.PhotoId, // Again, this key must match the response
+							style: 'cursor: pointer; margin: 15px; width: 200px; height: 200px;'
+						});
+						img.on('click', function() {
+							updateProfilePhoto(photo.PhotoId); // Ensure this is the correct identifier
+						});
+						photoGrid.append(img);
+					});
+				},
+
+
+
+            error: function(xhr, status, error) {
+                console.error("An error occurred: " + error);
+            }
+        });
+    }
+
+    
+	// Function to update the user's profile photo
+	function updateProfilePhoto(photoId, photoUrl) {
+    	$.ajax({
+        url: 'update_profile_photo.php',
+        type: 'POST',
+        data: { photoId: photoId, userId: activeUserId },
+        dataType: 'json', 
+        success: function(response) {
+            if (response && response.success) {
+                // Update the image in the user-selection-modal and current user image
+                $('#current-user-img').attr('src', photoUrl);
+                fetchUsers(); // Refetch the user data to update the user-selection-modal
+
+                // Close the profilePhotoModal
+                $('#profilePhotoModal').hide();
+            } else {
+                console.error("Error updating profile photo:", response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("An AJAX error occurred: " + error);
+        }
+    });
+	}
+
+	// Attach click event to each photo in the modal
+	$('#profilePhotoGrid').on('click', 'img', function() {
+		var selectedPhotoId = $(this).data('photo-id');
+		var selectedPhotoUrl = $(this).attr('src'); // Get the URL of the clicked photo
+		updateProfilePhoto(selectedPhotoId, selectedPhotoUrl);
+	});
+
+    // Get the profile photo modal
+	var profilePhotoModal = document.getElementById('profilePhotoModal');
+
+	// When the user clicks anywhere outside of the profile photo modal, close it
+	window.onclick = function(event) {
+		// Check if the click is outside the profilePhotoModal
+		if (event.target == profilePhotoModal) {
+			profilePhotoModal.style.display = 'none';
+		}
+		// Check if the click is outside the taskCountModal
+		else if (event.target == modal) {
+			modal.style.display = 'none';
+		}
+	};
+
+	// Get the home icon element
+	var homeIcon = document.querySelector('.icon-bar .home'); // Adjust the selector as needed
+
+	// Close modals on home icon click
+	homeIcon.onclick = function() {
+		// Close taskCountModal if it's open
+		if (taskCountModal.style.display === 'block') {
+			taskCountModal.style.display = 'none';
+		}
+
+		// Close profilePhotoModal if it's open
+		if (profilePhotoModal.style.display === 'block') {
+			profilePhotoModal.style.display = 'none';
+		}
+	};
+
+});
+
+
+</script>
+</body>
+</html>
+
+
